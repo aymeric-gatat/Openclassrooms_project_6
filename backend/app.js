@@ -1,15 +1,20 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
+// .env
+const dotenv = require("dotenv");
+dotenv.config();
+const MONGO_KEY = process.env.MONGODB_KEY;
 
 // Connection à mongodb
 const mongoose = require("mongoose");
 mongoose
-  .connect(
-    "mongodb+srv://aymeric:9s1DyZ4Nd58BslEU@cluster0.lptvli3.mongodb.net/?retryWrites=true&w=majority", //faire un .env dans les ressources du guide
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(`${MONGO_KEY}`, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
+
+// path
+const path = require("path");
 
 //Routers
 const userRoutes = require("./routes/user");
@@ -22,15 +27,12 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
   next();
 });
-// Authentification
+
+// Path
+app.use("/images", express.static(path.join(__dirname, "images")));
+// Signup & Login
 app.use("/api/auth", userRoutes);
-
 // Sauces
-app.use("/api", sauceRoutes);
-
-//App
-app.use((req, res, next) => {
-  res.json({ message: req.body });
-});
+app.use("/api/sauces", sauceRoutes);
 
 module.exports = app;

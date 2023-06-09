@@ -1,9 +1,13 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+// .env
+const dotenv = require("dotenv");
+dotenv.config();
+const TOKEN = process.env.TOKEN;
 
 exports.signup = (req, res, next) => {
-  /*bcrypt
+  bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
@@ -12,18 +16,10 @@ exports.signup = (req, res, next) => {
       });
       user
         .save()
-        .then(() => res.status(201).json({ message: "Utilisateur créé !", user: user }))
+        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
         .catch((error) => res.status(400).json({ error }));
     })
-    .catch((error) => res.status(500).json({ error }));*/
-  const user = new User({
-    email: "test2@test.fr",
-    password: "test",
-  });
-  user
-    .save()
-    .then(() => res.json({ message: req.body }))
-    .catch((error) => res.status(400).json({ error }));
+    .catch((error) => res.status(500).json({ error }));
 };
 
 exports.login = (req, res, next) => {
@@ -40,10 +36,7 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
-              // utiliser .env pour le token
-              expiresIn: "24h",
-            }),
+            token: jwt.sign({ userId: user._id }, TOKEN, { expiresIn: "24h" }),
           });
         })
         .catch((error) => res.status(400).json({ error }));
