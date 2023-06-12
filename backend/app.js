@@ -19,6 +19,7 @@ const path = require("path");
 //Routers
 const userRoutes = require("./routes/user");
 const sauceRoutes = require("./routes/sauce");
+const { error } = require("console");
 
 // Headers
 app.use((req, res, next) => {

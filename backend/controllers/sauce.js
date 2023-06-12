@@ -1,7 +1,9 @@
+const { error } = require("console");
 const Sauce = require("../models/Sauce");
 const fs = require("fs");
-
+const { parse } = require("path");
 //  Post
+
 exports.postSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
@@ -9,23 +11,17 @@ exports.postSauce = (req, res, next) => {
   const sauce = new Sauce({
     ...sauceObject,
     userId: req.auth.userId,
-    name: sauceObject.name,
-    manufacturer: sauceObject.manufacturer,
-    description: sauceObject.description,
-    mainPepper: sauceObject.mainPepper,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-    heat: sauceObject.heatValue,
   });
-
   sauce
     .save()
-    .then(() => {
-      res.status(201).json({ message: "Objet enregistré !" });
-    })
-    .catch((error) => {
-      res.status(400).json({ error });
-    });
+    .then(() => res.status(201).json({ message: "Objet enregistré" }))
+    .catch((error) => res.status(400).json({ error }));
 };
+
+// Post Like & Dislike
+
+exports.likeSauce = (req, res, next) => {};
 
 // Get
 
@@ -37,14 +33,14 @@ exports.getSauce = (req, res, next) => {
 
 //Put
 exports.putSauce = (req, res, next) => {
-  const SauceObject = req.file
+  const sauceObject = req.file
     ? {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
       }
     : { ...req.body };
 
-  delete SauceObject._userId;
+  delete sauceObject._userId;
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (sauce.userId != req.auth.userId) {
