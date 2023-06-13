@@ -17,4 +17,13 @@ const storage = multer.diskStorage({
   },
 });
 
-module.exports = multer({ storage: storage }).single("image");
+const fileFilter = (req, file, callback) => {
+  const allowedMimeTypes = ["image/png", "image/jpeg", "image/jpg"];
+  if (allowedMimeTypes.includes(file.mimetype)) {
+    callback(null, true);
+  } else {
+    callback(new Error("Invalid file type"));
+  }
+};
+
+module.exports = multer({ storage: storage, fileFilter: fileFilter }).single("image");
