@@ -1,3 +1,4 @@
+// Import des modules nécessaires
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
@@ -6,9 +7,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 const TOKEN = process.env.TOKEN;
 
+// Fonction pour d'inscription
 exports.signup = (req, res, next) => {
   bcrypt
-    .hash(req.body.password, 10)
+    .hash(req.body.password, 10) // Hashage du mot de passe avec un coût de 10
     .then((hash) => {
       const user = new User({
         email: req.body.email,
@@ -22,6 +24,7 @@ exports.signup = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
+// Fonction pour de  connexion
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
@@ -29,14 +32,14 @@ exports.login = (req, res, next) => {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
       }
       bcrypt
-        .compare(req.body.password, user.password)
+        .compare(req.body.password, user.password) // Comparaison du mot de passe fourni avec le mot de passe stocké
         .then((valid) => {
           if (!valid) {
             return res.status(401).json({ error: "Mot de passe incorrect !" });
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, TOKEN, { expiresIn: "24h" }),
+            token: jwt.sign({ userId: user._id }, TOKEN, { expiresIn: "24h" }), // Génération du token JWT avec une expiration de 24 heures
           });
         })
         .catch((error) => res.status(400).json({ error }));

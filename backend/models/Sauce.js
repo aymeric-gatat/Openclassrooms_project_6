@@ -1,6 +1,7 @@
+// Importation du module
 const mongoose = require("mongoose");
 
-// Shema de "Sauce"
+// Création du shéma MongoDB d'une sauce
 const sauceSchema = mongoose.Schema({
   userId: { type: String },
   name: { type: String },
@@ -15,4 +16,5 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: [{ type: String, ref: "Utilisateur" }],
 });
 
+// Exportation du modèle "Sauce" basé sur le schéma sauceSchema
 module.exports = mongoose.model("Sauce", sauceSchema);

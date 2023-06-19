@@ -1,11 +1,15 @@
+// Importation des modules
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-const userShema = mongoose.Schema({
+// Création du shéma MongoDB d'un utilisateur
+const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 });
 
-userShema.plugin(uniqueValidator);
+// Application du plugin uniqueValidator au schéma pour la validation des champs uniques
+userSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model("User", userShema);
+// Exportation du modèle "User" basé sur le schéma userSchema
+module.exports = mongoose.model("User", userSchema);
