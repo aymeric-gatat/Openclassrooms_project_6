@@ -25,7 +25,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ### Development server
 
-Run `npm install` from the `backend` directory. You can then start the server with `node server` or `nodemon server`.
 Add an `.env` file to the backend directory and include MongoDB connection details in `MONGODB_KEY` and identification token in `TOKEN`.
+Run `npm install` from the `backend` directory. You can then start the server with `node server` or `nodemon server`.
 The server should run on `localhost` with the default port `3000`.
 If the server runs on a different port for any reason, the port number will be printed to the console when the server starts, e.g., `Listening on port 3001`.
